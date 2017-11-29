@@ -8,6 +8,9 @@ const buttonUl = buttonDiv.querySelector('ul');
 const studentsPerPage = 10;
 const searchDiv = document.querySelector('.student-search');
 const noResultDiv = document.querySelector('.zero-results');
+var pagesNumbersList;
+var studentList = document.getElementsByClassName('student-list')[0];
+var studentNumber = studentList.children.length;
 
 // Determining the amount of pages needed based on the number of students
 function amountOfPages() {
@@ -24,17 +27,45 @@ function showFirstTen() {
             eachStudent[i].style.display = 'none';
         }
     }
+    var a = document.querySelectorAll('ul li a');
+    a[0].classList.add('active');
+
+
 }
 
 // Loop to create page links based on number of pages needed
 for (let i = 1; i <= amountOfPages(); i++) {
     let pageli = document.createElement('li');
     let pageLink = document.createElement('a');
-    pageLink.className = 'active';
+    pageLink.className = '';
     pageLink.href = '#';
     pageLink.textContent = i;
     buttonUl.appendChild(pageli);
     pageli.appendChild(pageLink);
+    pagesNumbersList = document.querySelectorAll('ul li a');
+    pagesNumbersList.forEach(activePage, eachStudent);
+}
+
+
+// How to get the links to be active
+function activePage(item){
+    item.onclick = function(){
+         for(var i=0; i<studentNumber; i++){
+            studentList.children[i].style.display = 'none';
+        }
+
+        for(var i=0; i<pagesNumbersList.length; i++){
+            pagesNumbersList[i].classList.remove('class', 'active');
+        }
+
+        item.classList.add('active');
+        var pageNumber = parseInt(item.innerHTML);
+        var start = (pageNumber * 10) - 10;
+        var end = (pageNumber * 10);
+        for(var i=start; i<end; i++){
+            studentList.children[i].style.display = 'block';
+        }
+    }
 }
 
 // Using event listener to divide students among the pages
@@ -84,6 +115,8 @@ searchButton.addEventListener('click', () => {
         noResultDiv.textContent = '';
     }
 });
+
+
 
 
 // Function call to display first ten students on load
